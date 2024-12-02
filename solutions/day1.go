@@ -2,16 +2,12 @@ package solutions
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
 )
 
-func Run(day string) {
-    data, _ := os.ReadFile("inputs/day" + day + ".txt")
-    lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-
+func RunDay1(lines []string) {
     l1 := make([]int, len(lines))
     l2 := make([]int, len(lines))
 
@@ -20,8 +16,8 @@ func Run(day string) {
         l1[i], _ = strconv.Atoi(nums[0])
         l2[i], _ = strconv.Atoi(nums[1])
     }
-    fmt.Println(solve1(l1, l2))
-    fmt.Println(solve2(l1, l2))
+    fmt.Println(day1Part1(l1, l2))
+    fmt.Println(day1Part2(l1, l2))
 }
 
 func abs(n int) int {
@@ -31,7 +27,7 @@ func abs(n int) int {
     return n
 }
 
-func solve1(l1 []int, l2 []int) int {
+func day1Part1(l1 []int, l2 []int) int {
     difference := 0
     sort.Ints(l1)
     sort.Ints(l2)
@@ -42,7 +38,7 @@ func solve1(l1 []int, l2 []int) int {
     return difference
 }
 
-func solve2(l1 []int, l2 []int) int {
+func day1Part2(l1 []int, l2 []int) int {
     counts := make(map[int]int)
     for _, num := range l2 {
         counts[num]++

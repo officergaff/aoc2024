@@ -1,9 +1,10 @@
 package main
 
 import (
+	"aoc2024/solutions"
 	"fmt"
 	"os"
-    "aoc2024/solutions"
+	"strings"
 )
 
 func main() {
@@ -13,5 +14,15 @@ func main() {
 	}
 
     day := os.Args[1]
-    solutions.Run(day)
+    Run(day)
+}
+
+func Run(day string) {
+    data, _ := os.ReadFile("inputs/day" + day + ".txt")
+    lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+
+    switch day {
+    case "1": solutions.RunDay1(lines)
+case "2": solutions.RunDay2(lines)
+    }
 }
