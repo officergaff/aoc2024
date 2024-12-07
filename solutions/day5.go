@@ -47,11 +47,13 @@ func RunDay5(data []byte) {
 	rulesE := strings.Split(partsE[0], "\n")
 	updatesE := strings.Split(partsE[1], "\n")
 	fmt.Println(day5part1(rulesE, updatesE))
+	fmt.Println(day5part2(rulesE, updatesE))
 
 	parts := strings.Split(string(data), "\n\n")
 	rules := strings.Split(parts[0], "\n")
 	updates := strings.Split(parts[1], "\n")
 	fmt.Println(day5part1(rules, updates))
+	fmt.Println(day5part2(rules, updates))
 }
 
 // Build a topological order only with the numbers involved in the updates
@@ -126,6 +128,40 @@ func day5part1(rules []string, updates []string) int {
 		if sort.IntsAreSorted(ord) {
 			mid := len(nums) / 2
 			total += nums[mid]
+		}
+	}
+	return total
+}
+
+func day5part2(rules []string, updates []string) int {
+	total := 0
+	for _, u := range updates {
+		uFields := strings.Split(u, ",")
+		nums := []int{}
+		for _, num := range uFields {
+			num, _ := strconv.Atoi(num)
+			nums = append(nums, num)
+		}
+		orderMap := buildTopoMap(rules, nums)
+		ord := []int{}
+		for _, num := range nums {
+			v, ok := orderMap[num]
+			if ok {
+				ord = append(ord, v)
+			}
+		}
+		if !sort.IntsAreSorted(ord) {
+			rOrderMap := map[int]int{}
+			for k, v := range orderMap {
+				rOrderMap[v] = k
+			}
+			sort.Ints(ord)
+			for i, v := range ord {
+				ord[i] = rOrderMap[v]
+			}
+			fmt.Println(ord)
+			mid := len(ord) / 2
+			total += ord[mid]
 		}
 	}
 	return total
