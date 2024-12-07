@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var example = `MMMSXXMASM
+var example4 = `MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
 MSAMASMSMX
@@ -16,8 +16,9 @@ SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX`
 
-func RunDay4(lines []string) {
-	exampleLines := strings.Split(example, "\n")
+func RunDay4(data []byte) {
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+	exampleLines := strings.Split(example4, "\n")
 	exampleChars := make([][]string, len(exampleLines))
 	for i, line := range exampleLines {
 		exampleChars[i] = strings.Split(line, "")

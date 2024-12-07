@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-func RunDay2(lines []string) {
+func RunDay2(data []byte) {
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
 	part1 := day2Part1(lines)
 	part2 := day2Part2(lines)
 	fmt.Println(part1)
