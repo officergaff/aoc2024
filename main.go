@@ -18,7 +18,10 @@ func main() {
 }
 
 func Run(day string) {
-	data, _ := os.ReadFile("inputs/day" + day + ".txt")
+	data, err := os.ReadFile("inputs/day" + day + ".txt")
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	switch day {
 	case "1":
@@ -31,5 +34,7 @@ func Run(day string) {
 		solutions.RunDay4(data)
 	case "5":
 		solutions.RunDay5(data)
+	case "6":
+		solutions.RunDay6(data)
 	}
 }
