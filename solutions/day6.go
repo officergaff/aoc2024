@@ -28,12 +28,11 @@ func process6(dat string) [][]string {
 
 func RunDay6(data []byte) {
 	graphE := process6(example6)
-	for _, v := range graphE {
-		fmt.Println(v)
-	}
 	day6Part1(graphE)
-	graph := process6(string(data))
+	day6Part2(graphE)
+	graph := process6(strings.TrimSpace(string(data)))
 	day6Part1(graph)
+	day6Part2(graph)
 }
 
 func findPosition(graph [][]string) []int {
@@ -58,7 +57,7 @@ type Key struct {
 	X int
 }
 
-func day6Part1(graph [][]string) {
+func day6Part1(graph [][]string) [][]int {
 	currDir := 0
 	currPos := findPosition(graph)
 	visited := map[Key]bool{}
@@ -75,5 +74,59 @@ func day6Part1(graph [][]string) {
 		}
 		currPos[0], currPos[1] = nY, nX
 	}
-	fmt.Println(len(visited))
+	arr := [][]int{}
+	for k := range visited {
+		arr = append(arr, []int{k.Y, k.X})
+	}
+	return arr
+}
+
+type Key2 struct {
+	Y   int
+	X   int
+	dir int
+}
+
+func isLoop(graph [][]string) bool {
+	currDir := 0
+	currPos := findPosition(graph)
+	visited := map[Key2]bool{}
+	for 0 <= currPos[0] && currPos[0] < len(graph) && 0 <= currPos[1] && currPos[1] < len(graph[0]) {
+		_, ok := visited[Key2{currPos[0], currPos[1], currDir}]
+		if !ok {
+			visited[Key2{currPos[0], currPos[1], currDir}] = true
+		} else {
+			return true
+		}
+		nY, nX := getNextCoord(currPos, currDir)
+		if !(0 <= nY && nY < len(graph) && 0 <= nX && nX < len(graph[0])) {
+			return false
+		}
+		nCell := graph[nY][nX]
+		if nCell == "#" {
+			currDir = (currDir + 1) % 4
+		} else {
+			// very important else statement
+			// distinct from the part 1, where we don't really care about the orientation of the guard
+			// here we're making sure to record each orientation change in the visited map
+			currPos[0], currPos[1] = nY, nX
+		}
+	}
+	return false
+}
+
+func day6Part2(graph [][]string) {
+	vArr := day6Part1(graph)
+	total := 0
+	for _, coord := range vArr {
+		y, x := coord[0], coord[1]
+		if graph[y][x] != "^" {
+			graph[y][x] = "#"
+			if isLoop(graph) {
+				total++
+			}
+			graph[y][x] = "."
+		}
+	}
+	fmt.Println(total)
 }
