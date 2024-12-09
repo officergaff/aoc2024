@@ -108,7 +108,7 @@ func isLoop(graph [][]string) bool {
 		} else {
 			// very important else statement
 			// distinct from the part 1, where we don't really care about the orientation of the guard
-			// here we're making sure to record each orientation change in the visited map
+			// here we're making sure to record each direction change in the visited map
 			currPos[0], currPos[1] = nY, nX
 		}
 	}
