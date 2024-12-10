@@ -159,7 +159,6 @@ func day5part2(rules []string, updates []string) int {
 			for i, v := range ord {
 				ord[i] = rOrderMap[v]
 			}
-			fmt.Println(ord)
 			mid := len(ord) / 2
 			total += ord[mid]
 		}
