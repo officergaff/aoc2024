@@ -13,6 +13,17 @@ func isNumeric(r string) bool {
 	return err == nil
 }
 
+func calculateScore(diskmap []string) int {
+	total := 0
+	for idx, r := range diskmap {
+		num, err := strconv.Atoi(r)
+		if err == nil {
+			total += (num * idx)
+		}
+	}
+	return total
+}
+
 func buildDisk(input string) []string {
 	nums := []int{}
 	for _, v := range strings.Split(input, "") {
@@ -47,18 +58,9 @@ func day9Part1(input string) int {
 			right--
 			continue
 		}
-		diskmap[left], diskmap[right] = diskmap[right], diskmap[left]
-		left++
-		right--
+		swapSpaces(diskmap[right], left, right, diskmap)
 	}
-	total := 0
-	for idx, r := range diskmap {
-		num, err := strconv.Atoi(r)
-		if err == nil {
-			total += (num * idx)
-		}
-	}
-	return total
+	return calculateScore(diskmap)
 }
 
 func checkSpaceLength(ptr int, diskmap []string) int {
@@ -72,35 +74,36 @@ func checkSpaceLength(ptr int, diskmap []string) int {
 	}
 }
 
-func findSpaces(filesize int, left int, right int, diskmap []string) map[int]int {
-	spaces := map[int]int{}
-	for left < right {
-		if isNumeric(diskmap[left]) {
-			left++
+func findSpace(filesize int, right int, diskmap []string) int {
+	ptr := 0
+	for ptr < right {
+		if isNumeric(diskmap[ptr]) {
+			ptr++
 			continue
 		}
-		spaceLength := checkSpaceLength(left, diskmap)
+		spaceLength := checkSpaceLength(ptr, diskmap)
 		if spaceLength >= filesize {
-			spaces[left] = spaceLength
+			return ptr
 		}
-		left += spaceLength
+		ptr += spaceLength
 	}
-	return spaces
+	return -1
 }
 
 func checkDataLength(data string, ptr int, diskmap []string) int {
 	length := 0
-	for {
+	for ptr >= 0 {
 		if diskmap[ptr] != data {
 			return length
 		}
 		length++
 		ptr--
 	}
+	return length
 }
 
 func swapSpaces(data string, left int, right int, diskmap []string) {
-	for {
+	for left < right {
 		if diskmap[right] != data {
 			return
 		}
@@ -110,51 +113,30 @@ func swapSpaces(data string, left int, right int, diskmap []string) {
 	}
 }
 
-/*
-Todo: instead of a map, find the earliest free space available, return nil if there is no such thing
-*/
 func day9Part2(input string) int {
 	diskmap := buildDisk(input)
-	left, right := 0, len(diskmap)-1
-	for left < right {
-		if isNumeric(diskmap[left]) {
-			left++
-			continue
-		}
+	right := len(diskmap) - 1
+	for 0 <= right {
 		if !isNumeric(diskmap[right]) {
 			right--
 			continue
 		}
 		dataLength := checkDataLength(diskmap[right], right, diskmap)
-		spaces := findSpaces(dataLength, left, right, diskmap)
-		swapped := false
-		fmt.Printf("datalength of: %v, spaces available: %v, diskmap state: %v\n", dataLength, spaces, diskmap)
-		for k, v := range spaces {
-			if dataLength <= v && !swapped {
-				swapSpaces(diskmap[right], k, right, diskmap)
-				right -= dataLength
-				swapped = true
-			}
-		}
-		if !swapped {
+		// Find free space index
+		space := findSpace(dataLength, right, diskmap)
+		if space != -1 {
+			swapSpaces(diskmap[right], space, right, diskmap)
+		} else {
 			right -= dataLength
 		}
 	}
-	total := 0
-	for idx, r := range diskmap {
-		num, err := strconv.Atoi(r)
-		if err == nil {
-			total += (num * idx)
-		}
-	}
-	fmt.Println(diskmap)
-	return total
+	return calculateScore(diskmap)
 }
 
 func RunDay9(data []byte) {
-	// input := strings.TrimSpace(string(data))
-	// part1 := day9Part1(input)
-	// fmt.Println(part1)
-	part2 := day9Part2(example9)
+	input := strings.TrimSpace(string(data))
+	part1 := day9Part1(input)
+	fmt.Println(part1)
+	part2 := day9Part2(input)
 	fmt.Println(part2)
 }
