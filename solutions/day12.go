@@ -23,7 +23,9 @@ func RunDay12(data []byte) {
 		regionMap = append(regionMap, strings.Split(line, ""))
 	}
 	part1 := day12Part1(regionMap)
+	part2 := day12Part2(regionMap)
 	fmt.Println(part1)
+	fmt.Println(part2)
 }
 
 type Plot struct {
@@ -113,6 +115,32 @@ func findCorners(selfMap map[Plot]bool) int {
 	corners := 0
 	for plot := range selfMap {
 		y, x := plot.y, plot.x
+		// Outer corners
+		if !selfMap[Plot{y - 1, x}] && !selfMap[Plot{y, x - 1}] {
+			corners += 1
+		}
+		if !selfMap[Plot{y - 1, x}] && !selfMap[Plot{y, x + 1}] {
+			corners += 1
+		}
+		if !selfMap[Plot{y + 1, x}] && !selfMap[Plot{y, x - 1}] {
+			corners += 1
+		}
+		if !selfMap[Plot{y + 1, x}] && !selfMap[Plot{y, x + 1}] {
+			corners += 1
+		}
+		// Inner corners
+		if selfMap[Plot{y - 1, x}] && selfMap[Plot{y, x - 1}] && !selfMap[Plot{y - 1, x - 1}] {
+			corners += 1
+		}
+		if selfMap[Plot{y - 1, x}] && selfMap[Plot{y, x + 1}] && !selfMap[Plot{y - 1, x + 1}] {
+			corners += 1
+		}
+		if selfMap[Plot{y + 1, x}] && selfMap[Plot{y, x - 1}] && !selfMap[Plot{y + 1, x - 1}] {
+			corners += 1
+		}
+		if selfMap[Plot{y + 1, x}] && selfMap[Plot{y, x + 1}] && !selfMap[Plot{y + 1, x + 1}] {
+			corners += 1
+		}
 	}
 	return corners
 }
