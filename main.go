@@ -50,5 +50,7 @@ func Run(day string) {
 		solutions.RunDay12(data)
 	case "13":
 		solutions.RunDay13(data)
+	case "14":
+		solutions.RunDay14(data)
 	}
 }
